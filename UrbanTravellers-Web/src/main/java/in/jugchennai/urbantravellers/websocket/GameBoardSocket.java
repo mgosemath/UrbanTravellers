@@ -18,13 +18,13 @@ package in.jugchennai.urbantravellers.websocket;
 import in.jugchennai.urbantravellers.game.GameBoard;
 import in.jugchennai.urbantravellers.game.Player;
 import java.io.IOException;
+import javax.net.websocket.annotations.WebSocketMessage;
 import javax.websocket.EncodeException;
-import javax.websocket.EndpointFactory;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketClose;
-import javax.websocket.WebSocketEndpoint;
-import javax.websocket.WebSocketMessage;
-import javax.websocket.WebSocketOpen;
+import javax.websocket.server.ServerEndpoint;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -35,18 +35,20 @@ import org.codehaus.jettison.json.JSONObject;
  * @author Prasanna Kumar <prassee.sathian@gmail.com>
  * @author Rajmahendra Hegde <rajmahendra@gmail.com>
  */
-@WebSocketEndpoint(value = "/UTGameSocket",
+@ServerEndpoint(value = "/UTGameSocket",
 encoders = {DataEncoder.class},
 decoders = {DataDecoder.class})
 public class GameBoardSocket extends UTSocket {
 
-    private static Logger logger = Logger.getLogger(GameBoardSocket.class);
+    private static final Logger logger = Logger.getLogger(GameBoardSocket.class);
     // the getInstance method does some bootstrap activities
 
     /**
      * the following block of code might be moved to a JSF handler and it has to
      * be removed from here
      *
+     * @param peer
+     * @throws java.lang.Exception
      * @Deprecated
      *
      * static { try { // replace the GameCache.GAME_ID with id obtained from DB
@@ -62,13 +64,13 @@ public class GameBoardSocket extends UTSocket {
      * + ex); } }
      *
      */
-    @WebSocketOpen
+    @OnOpen
     public void onOpen(Session peer) throws Exception {
         logger.info("added player to session ");
         peers.add(peer);
     }
 
-    @WebSocketClose
+    @OnClose
     public void onClose(Session peer) {
         logger.info("removing player from session");
         peers.remove(peer);
@@ -82,7 +84,7 @@ public class GameBoardSocket extends UTSocket {
      * @throws IOException
      * @throws EncodeException
      */
-    @WebSocketMessage
+    @OnMessage
     public void broadCastMessage(GameData gd, Session peer)
             throws IOException, EncodeException {
         try {
@@ -106,17 +108,21 @@ public class GameBoardSocket extends UTSocket {
             System.out.println("JSON "+json);
             if(type.equals("getPlayers"))
             {
-                peer.getRemote().sendObject(gamedata);
+                peer.getBasicRemote().sendObject(gamedata);
             }
             else
             {
                 for (Session currPeer : peers) {
-                    currPeer.getRemote().sendObject(gamedata);
+                    currPeer.getBasicRemote().sendObject(gamedata);
                 }
             }
         } catch (JSONException ex) {
             logger.error("json exception has occured" + ex.getMessage());
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        } catch (NumberFormatException ex) {
+            logger.error(ex.getMessage());
+        } catch (EncodeException ex) {
             logger.error(ex.getMessage());
         }
     }
@@ -136,7 +142,7 @@ public class GameBoardSocket extends UTSocket {
         JSONObject json = new JSONObject();
         json.put("notification", name);
         for (Session currPeer : peers) {
-            currPeer.getRemote().sendObject(gamedata);
+            currPeer.getBasicRemote().sendObject(gamedata);
         }
     }
 }
@@ -146,16 +152,16 @@ public class GameBoardSocket extends UTSocket {
  *
  * @author prasannakumar
  */
-class GameBoardEndpointFactory implements EndpointFactory {
-
-    private Logger logger = Logger.getLogger(this.getClass());
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object createEndpoint() {
-        logger.info("creating new end point");
-        return null;
-    }
-}
+//class GameBoardEndpointFactory implements EndpointFactory {
+//
+//    private Logger logger = Logger.getLogger(this.getClass());
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public Object createEndpoint() {
+//        logger.info("creating new end point");
+//        return null;
+//    }
+//}

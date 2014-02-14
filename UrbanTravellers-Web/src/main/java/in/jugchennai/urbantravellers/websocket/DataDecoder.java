@@ -17,6 +17,7 @@ package in.jugchennai.urbantravellers.websocket;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
+import javax.websocket.EndpointConfig;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -56,5 +57,15 @@ public class DataDecoder implements Decoder.Text<GameData> {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public void init(EndpointConfig config) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void destroy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

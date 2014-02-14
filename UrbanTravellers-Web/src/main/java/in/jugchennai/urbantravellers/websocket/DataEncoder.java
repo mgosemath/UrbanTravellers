@@ -17,6 +17,7 @@ package in.jugchennai.urbantravellers.websocket;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
+import javax.websocket.EndpointConfig;
 
 /*
  * 
@@ -29,5 +30,15 @@ public class DataEncoder implements Encoder.Text<GameData> {
     @Override
     public String encode(GameData gd) throws EncodeException {
         return gd.getJson().toString();
+    }
+
+    @Override
+    public void init(EndpointConfig config) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void destroy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

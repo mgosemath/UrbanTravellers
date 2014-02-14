@@ -15,20 +15,20 @@
  */
 package in.jugchennai.urbantravellers.websocket;
 
-import javax.websocket.WebSocketEndpoint;
-import javax.websocket.WebSocketMessage;
+import javax.websocket.OnMessage;
+import javax.websocket.server.ServerEndpoint;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author prasannakumar
  */
-@WebSocketEndpoint("/pingEndpoint")
+@ServerEndpoint("/pingEndpoint")
 public class SampleEndpoint {
 
     Logger logger = Logger.getLogger(SampleEndpoint.class);
 
-    @WebSocketMessage
+    @OnMessage
     public void onMessage(String message) {
         logger.info("just a msg arrived on sample WS endpoint");
     }

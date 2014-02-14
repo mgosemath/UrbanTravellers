@@ -34,14 +34,14 @@ public class RegistrationBean {
     private UserService service;
     private UtUsers utusers;
     
-    private Logger logger;
+    private final Logger logger;
     
     private String fullName;
     private String userName;
     private String password;
     private String reenterPassword;
     private String displayName;
-    private long updateValue=0;
+    private final Integer updateValue=0;
 
     public RegistrationBean() {
          logger = Logger.getLogger(RegistrationBean.class);

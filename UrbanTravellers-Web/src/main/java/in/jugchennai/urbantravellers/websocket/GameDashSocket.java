@@ -21,11 +21,11 @@ import in.jugchennai.urbantravellers.game.GameStatus;
 import static in.jugchennai.urbantravellers.websocket.UTSocket.cache;
 import java.io.IOException;
 import javax.websocket.EncodeException;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketClose;
-import javax.websocket.WebSocketEndpoint;
-import javax.websocket.WebSocketMessage;
-import javax.websocket.WebSocketOpen;
+import javax.websocket.server.ServerEndpoint;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -33,7 +33,7 @@ import org.codehaus.jettison.json.JSONObject;
  *
  * @author prasannakumar
  */
-@WebSocketEndpoint(value = "/UTGameDashSocket",
+@ServerEndpoint(value = "/UTGameDashSocket",
         encoders = {DataEncoder.class},
         decoders = {DataDecoder.class})
 public class GameDashSocket extends UTSocket {
@@ -46,11 +46,11 @@ public class GameDashSocket extends UTSocket {
      * @throws EncodeException
      * @throws JSONException
      */
-    @WebSocketMessage
+    @OnMessage
     public void broadCastMessage(GameData gd, Session peer)
             throws IOException, EncodeException, JSONException, Exception {
         gd.setJson(prepareGameDash(gd));
-        peer.getRemote().sendObject(gd);
+        peer.getBasicRemote().sendObject(gd);
     }
 
     /**
@@ -72,12 +72,12 @@ public class GameDashSocket extends UTSocket {
         return jSONObject;
     }
 
-    @WebSocketOpen
+    @OnOpen
     public void onOpen(Session peer) throws Exception {
         peers.add(peer);
     }
 
-    @WebSocketClose
+    @OnClose
     public void onClose(Session peer) {
         peers.remove(peer);
     }

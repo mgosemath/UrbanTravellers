@@ -49,7 +49,7 @@ public class UtUsers implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userid")
-    private Long userid;
+    private Integer userid;
     private String username;
     private String password;
     @Temporal(TemporalType.TIMESTAMP)
@@ -58,7 +58,7 @@ public class UtUsers implements Serializable {
     public UtUsers() {
     }
 
-    public UtUsers(Long userid) {
+    public UtUsers(Integer userid) {
         this.userid = userid;
     }
 
@@ -68,11 +68,11 @@ public class UtUsers implements Serializable {
 
     }
 
-    public Long getUserid() {
+    public Integer getUserid() {
         return userid;
     }
 
-    public void setUserid(Long userid) {
+    public void setUserid(Integer userid) {
         this.userid = userid;
     }
 

@@ -19,18 +19,18 @@ import in.jugchennai.urbantravellers.game.GameBoard;
 import in.jugchennai.urbantravellers.game.Player;
 import java.io.IOException;
 import javax.websocket.EncodeException;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketClose;
-import javax.websocket.WebSocketEndpoint;
-import javax.websocket.WebSocketMessage;
-import javax.websocket.WebSocketOpen;
+import javax.websocket.server.ServerEndpoint;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author prasannakumar
  */
-@WebSocketEndpoint(value = "/UTGameBootSocket",
+@ServerEndpoint(value = "/UTGameBootSocket",
         encoders = {DataEncoder.class},
         decoders = {DataDecoder.class})
 public class GameBootSocket extends UTSocket {
@@ -43,7 +43,7 @@ public class GameBootSocket extends UTSocket {
      * @throws EncodeException
      * @throws JSONException
      */
-    @WebSocketMessage
+    @OnMessage
     public void broadCastMessage(GameData gd, Session peer)
             throws IOException, EncodeException, JSONException, Exception {
         System.out.println("JSON RECEIVED");
@@ -64,18 +64,18 @@ public class GameBootSocket extends UTSocket {
         gd.setJson(jSONObject);
         System.out.println("JSON : "+gd.getJson());
         for (Session currPeer : peers) {
-            currPeer.getRemote().sendObject(gd);
+            currPeer.getBasicRemote().sendObject(gd);
         }
         System.out.println("JSON SENT");
     }
 
-    @WebSocketOpen
+    @OnOpen
     public void onOpen(Session peer) throws Exception {
         peers.add(peer);
         System.out.println("player added");
     }
 
-    @WebSocketClose
+    @OnClose
     public void onClose(Session peer) {
         peers.remove(peer);
     }

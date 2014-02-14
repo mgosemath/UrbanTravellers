@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.websocket.Session;
-import javax.websocket.WebSocketClose;
-import javax.websocket.WebSocketOpen;
 
 /**
  *

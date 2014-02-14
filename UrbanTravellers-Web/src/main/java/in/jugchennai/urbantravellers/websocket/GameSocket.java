@@ -27,6 +27,6 @@ public class GameSocket {
     private String gameId = "";
 
     public void movePlayer(String playerId, int diceValue) {
-        cache.getBoard(gameId).movePlayerPositionOnBoard(playerId, diceValue);
+        cache.getBoard().movePlayerPosition(playerId, diceValue);
     }
 }
